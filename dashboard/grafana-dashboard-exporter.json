@@ -1,0 +1,110 @@
+{
+  "__inputs": [],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": "5.0.0"
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "One button, which will export all Grafana dashboards and download them as a zip file.",
+  "editable": false,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "content": "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js'></script>\n<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.min.js'></script>\n<script type='text/javascript' src='https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js'></script>\n\n<script type='text/javascript'>\nfunction resetMessage () {\n    $(\"#result\")\n    .removeClass()\n    .text(\"\");\n}\nfunction showMessage(text) {\n    resetMessage();\n    $(\"#result\")\n    .addClass(\"alert alert-success\")\n    .text(text);\n}\nfunction showError(text) {\n    resetMessage();\n    $(\"#result\")\n    .addClass(\"alert alert-danger\")\n    .text(text);\n}\nfunction updatePercent(percent) {\n    $(\"#progress_bar\").removeClass(\"hide\")\n    .find(\".progress-bar\")\n    .attr(\"aria-valuenow\", percent)\n    .css({\n        width : percent + \"%\"\n    });\n}\n\nfunction urlToPromise(url) {\n    return new Promise(function(resolve, reject) {\n        JSZipUtils.getBinaryContent(url, function (err, data) {\n            if(err) {\n                reject(err);\n            } else {\n                resolve(data);\n            }\n        });\n    });\n}\n\nvar $form = $(\"#download_form\").on(\"submit\", function () {\n\n    resetMessage();\n    if(!JSZip.support.blob) {\n      showError(\"This Grafana exporter works only with a recent browser !\");\n      return;\n    }\n    var Promise = window.Promise;\n    if (!Promise) {\n      Promise = JSZip.external.Promise;\n    }\n\n    var zip = new JSZip();\n\n    // get all dashboards\n    $.ajax({\n        type: 'GET',\n        url: '/api/search',\n        data: 'query=&type=dash-db',\n        dataType: 'json',\n        async: false,\n        success: function (data) {\n            $.each(data, function(index, el) {\n              if ('folderTitle' in el) {\n                zipname = el.folderTitle.replace(/[:]{1}/g,\"-\") + '/' + el.title.replace(/[:]{1}/g,\"-\") + '.json';\n              } else {\n                zipname = el.title.replace(/[:]{1}/g,\"-\") + '.json';\n              }\n              zip.file(zipname, urlToPromise(\"/api/dashboards/uid/\" + el.uid), {binary:true});\n            });\n        }\n    });\n\n    // when everything has been downloaded, we can trigger the dl\n    zip.generateAsync({type:\"blob\"}, function updateCallback(metadata) {\n        var msg = \"Exporting: \" + metadata.percent.toFixed(2) + \" %\";\n        if(metadata.currentFile) {\n            msg += \", current file = \" + metadata.currentFile;\n        }\n        showMessage(msg);\n        updatePercent(metadata.percent|0);\n    })\n    .then(function callback(blob) {\n        filename = \"grafana-dashboards-\" + new Date().getTime() + \".zip\";\n        saveAs(blob, filename);\n        showMessage(\"Done !\");\n    }, function (e) {\n        showError(e);\n    });\n\n    return false;\n});\n</script>\n\n<form action=\"#\" id=\"download_form\">\n    <button type=\"submit\" class=\"btn btn-primary\"><i class=\"fa fa-save\"></i> Download all dashboards</button>\n    <br/><br/>\n</form>\n\n<div class=\"progress hide\" id=\"progress_bar\">\n    <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 0%;\">\n    </div>\n</div>\n\n<p class=\"hide\" id=\"result\"></p>",
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "links": [],
+      "mode": "html",
+      "title": "Grafana Dashboard Exporter",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "content": "<a style=\"float: right\" href=\"http://www.monitoringartist.com\" target=\"_blank\" title=\"Dashboard maintained by Monitoring Artist - DevOps / Docker / Kubernetes / AWS ECS / Google GCP / Zabbix / Zenoss / Terraform / Monitoring\"><img src=\"https://monitoringartist.github.io/monitoring-artist-logo-grafana.png\" height=\"30px\" /></a><a style=\"float: left\" target=\"_blank\" href=\"https://grafana.com/dashboards/5831\">Installed from Grafana.com dashboards</a>",
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "links": [],
+      "mode": "html",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [
+    "monitoringartist"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true,
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Grafana Dashboard Exporter",
+  "uid": "neLqKmMik",
+  "version": 30
+}
