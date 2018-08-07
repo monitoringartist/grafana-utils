@@ -12,7 +12,9 @@ Export all Grafana dashboards (Grafana 5+).
 
 Use [dashboard API](http://docs.grafana.org/http_api/dashboard/#create-update-dashboard) to restore dashboard. For example:
 ```
-cat <exported-dashboard.json> | jq '. + {overwrite: true}' | curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <api-key-with-write-permissions>" <grafana-uri>/api/dashboards/db -d @-
+cat <exported-dashboard.json> | jq '. + {overwrite: true}' | curl -X POST \
+-H "Content-Type: application/json" -H "Authorization: Bearer <api-key-with-write-permissions>" \
+<grafana-uri>/api/dashboards/db -d @-
 ```
 
 # Author
