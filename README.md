@@ -1,12 +1,12 @@
 [<img src="https://monitoringartist.github.io/managed-by-monitoringartist.png" alt="Managed by Monitoring Artist: DevOps / Docker / Kubernetes / AWS ECS / Zabbix / Zenoss / Terraform / Monitoring" align="right"/>](http://www.monitoringartist.com 'DevOps / Docker / Kubernetes / AWS ECS / Zabbix / Zenoss / Terraform / Monitoring')
 
-# Grafana Dashboard Exporter
+# Grafana Dashboard Exporter/Importer
 
-Export all Grafana dashboards (Grafana 5+).
+Export/import Grafana dashboards (Grafana 5+).
 
 ## Dashboard
 
-![Grafana Dashboard Exporter](https://raw.githubusercontent.com/monitoringartist/grafana-dashboard-exporter/master/doc/dashboard-grafana-dashboard-exporter.png)
+![Grafana Dashboard Exporter/Importer](https://raw.githubusercontent.com/monitoringartist/grafana-dashboard-exporter/master/doc/grafana-dashboard-exporter-importer.png)
 
 ## Dashboard restore operation
 
@@ -25,8 +25,8 @@ Kubernetes, ECS, AWS, Google GCP, Terraform, Lambda, Zabbix, Grafana, Elasticsea
 Kibana, Prometheus, Sysdig,...
 
 Summary:
-* 2000+ [GitHub](https://github.com/monitoringartist/) stars
-* 10 000+ [Grafana dashboard](https://grafana.net/monitoringartist) downloads
+* 3000+ [GitHub](https://github.com/monitoringartist/) stars
+* 20 000+ [Grafana dashboard](https://grafana.net/monitoringartist) downloads
 * 1 000 000+ [Docker image](https://hub.docker.com/u/monitoringartist/) pulls
 
 Professional devops / monitoring / consulting services:
