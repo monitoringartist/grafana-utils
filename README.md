@@ -24,6 +24,11 @@ cat <exported-dashboard.json> | jq '. * {overwrite: true, dashboard: {id: null}}
 <grafana-uri>/api/dashboards/db -d @-
 ```
 
+## Grafana 6+ users
+
+The text panel does no longer by default allow unsantizied HTML, which is required to run custom Javascript code in the dashboard.
+To enable unsafe Javascript execution in text panels enable the settings `disable_sanitize_html` under the section `[panels]` in your Grafana ini file, or set env variable `GF_PANELS_DISABLE_SANITIZE_HTML=true`.
+
 # Author
 
 [Devops Monitoring Expert](http://www.jangaraj.com 'DevOps / Docker / Kubernetes / AWS ECS / Google GCP / Zabbix / Zenoss / Terraform / Monitoring'),
