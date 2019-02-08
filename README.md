@@ -17,6 +17,13 @@ cat <exported-dashboard.json> | jq '. + {overwrite: true}' | curl -X POST \
 <grafana-uri>/api/dashboards/db -d @-
 ```
 
+When importing dashboards for the first time reset the `id`:
+```
+cat <exported-dashboard.json> | jq '. * {overwrite: true, dashboard: {id: null}}' | curl -X POST \
+-H "Content-Type: application/json" -H "Authorization: Bearer <api-key-with-write-permissions>" \
+<grafana-uri>/api/dashboards/db -d @-
+```
+
 # Author
 
 [Devops Monitoring Expert](http://www.jangaraj.com 'DevOps / Docker / Kubernetes / AWS ECS / Google GCP / Zabbix / Zenoss / Terraform / Monitoring'),
